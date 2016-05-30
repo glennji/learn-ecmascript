@@ -50,11 +50,11 @@ var runTest = function () {
 
   var ok = true;
   ok = ok && searchFunc(people, 'lname', 'S')!=undefined && searchFunc(people, 'lname', 'S').length == 3;
-  console.log("1 " + ok)
+  console.log("1 " + ok);
   ok = ok && searchFunc(people, 'lname', 'sI').length == 1;
-  console.log("2 " + ok)
+  console.log("2 " + ok);
   ok = ok && searchFunc(people, 'lname', 'KeLLe').length == 1;
-  console.log("3 " + ok)
+  console.log("3 " + ok);
 
   if (ok) {
     console.error('CORRECT');
