@@ -2,6 +2,7 @@
  * Created by glenn.mason on 27/05/2016.
  */
 
+/* jshint globalstrict: true */
 'use strict';
 
 var instrument = function (obj, cb) {
@@ -9,29 +10,31 @@ var instrument = function (obj, cb) {
   console.log();
   var names = Object.getOwnPropertyNames(obj);
   console.log('property names are ' + names);
+  
+  function add_property_proxy(obj, p) {
+    if (!p.startsWith("_")) {
+      obj["_" + p] = obj[p];
+      Object.defineProperty(obj, p, {
+        get: function() {
+          console.log("you want?");
+          return obj['_' + p];
+        },
+        set: function(v) {
+          console.log("setting " + p);
+          cb(obj, p, obj['_' + p], v);
+          obj['_' + p] = v;
+        },
+        enumerable: true,
+        configurable: true
+      });
+    }
+  }
 
   // another exercise
   for (var prop in obj) {
-    //var prop = obj[i];
-    (function(p) {
-      //if (!p.startsWith("_")) 
-      {
-        obj['_' + p] = obj[p];
-        Object.defineProperty(obj, p, {
-          get: function() {
-            console.log("you want?");
-            return obj['_' + p];
-          },
-          set: function(v) {
-            console.log("setting " + p);
-            cb(obj, p, obj['_' + p], v);
-            obj['_' + p] = v;
-          },
-          enumerable: true,
-          configurable: true
-        });
-      }
-    })(prop);
+    if (obj.hasOwnProperty(prop)){
+      add_property_proxy(obj, prop);
+    }
   }
 };
 
